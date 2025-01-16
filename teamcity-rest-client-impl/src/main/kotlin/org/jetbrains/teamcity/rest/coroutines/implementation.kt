@@ -1901,10 +1901,11 @@ private class BuildImpl(
 
     override suspend fun isDetachedFromAgent(): Boolean = detachedFromAgent.getValue()
 
-    override fun getTestRuns(status: TestStatus?): Flow<TestRun> = instance
+    override fun getTestRuns(status: TestStatus?, pageSize: Int?): Flow<TestRun> = instance
         .testRuns()
         .forBuild(id)
         .let { if (status == null) it else it.withStatus(status) }
+        .let { if (pageSize == null) it else it.pageSize(pageSize) }
         .all()
 
     override suspend fun getProjectId(): ProjectId = projectId.getValue()
